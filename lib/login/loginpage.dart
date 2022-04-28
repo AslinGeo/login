@@ -1,6 +1,8 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:login/login/signup.dart';
+import 'package:login/service/loginservice.dart';
 
 import '../pages/homescreen.dart';
 
@@ -18,13 +20,15 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 243, 203, 203),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
           child: SafeArea(
         child: Column(
           children: [
+            const SizedBox(height: 50,),
+            
             Container(
-              height: MediaQuery.of(context).size.height * 0.25,
+              // height: MediaQuery.of(context).size.height * 0.25,
               child: Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -41,6 +45,14 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:const [
+                 Text('Welcome Back',
+               style: TextStyle(fontSize: 20,color: Colors.blue,fontWeight: FontWeight.w500),),
+               Text('Sign to Continue',style: TextStyle(color: Colors.grey),)
+              ],
+            ),
             Container(
               margin: const EdgeInsets.all(40),
               child: Form(
@@ -51,14 +63,14 @@ class _LoginState extends State<Login> {
                         controller: emailcontroller,
                         validator: (value){
                           if(value==null || value.isEmpty){
-                            return 'UserName is required';
+                            return 'Email is required';
                           }
                           return null;
 
                         },
                         decoration: const InputDecoration(
-                          hintText: 'Enter Username',
-                          labelText: 'Name',
+                          hintText: 'Enter Email',
+                          labelText: 'Email',
                           icon: Icon(Icons.person),
                         )),
                     const SizedBox(
@@ -99,15 +111,19 @@ class _LoginState extends State<Login> {
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(20)),
                       child: FlatButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if(_formkey.currentState!.validate())
                           {
-                            
+                            var value=await LoginService().checkLogin(emailcontroller.text, passcontroller.text);
+                            if(value.length >0)
+                            {
+                                 Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const HomeScreen()));
+                            }
                           }
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (_) => const HomeScreen()));
+                          
                         },
                         child: const Text(
                           'Login',
@@ -118,20 +134,26 @@ class _LoginState extends State<Login> {
                     const SizedBox(
                       height: 25,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                     children: [
-                       const Text('New User?'),
-                       TextButton(onPressed: (){},
-                        child: const Text('Create Account',
-                        style: TextStyle(color: Colors.blue),))
-                     ],
-                         
-                    )
+                   
                   ],
                 ),
               ),
             ),
+             Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       const Text("Don't have account?"),
+                       TextButton(onPressed: (){
+                         Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const SignUp()));
+                       },
+                        child: const Text('Create a new account',
+                        style: TextStyle(color: Colors.blue),))
+                     ],
+                         
+                    )
           ],
         ),
       )),
