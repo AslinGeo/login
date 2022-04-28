@@ -32,7 +32,7 @@ insertData(table,data) async{
 }
 checkLogin(email,password) async{
   var connection=await database;
-  return await connection?.query('users', where: '"email" = ?''"password"=?', whereArgs: [[email],[password]]);
+  return await connection?.rawQuery("SELECT * FROM users WHERE email = '$email' and password = '$password'");
 
 }
 }

@@ -20,6 +20,7 @@ class _SignUpState extends State<SignUp> {
   final emailcontroller = TextEditingController();
   final passcontroller = TextEditingController();
   final cfpasscontroller = TextEditingController();
+  var confirmpassword;
 
   final _formkey = GlobalKey<FormState>();
   @override
@@ -95,6 +96,7 @@ class _SignUpState extends State<SignUp> {
                         TextFormField(
                           controller:passcontroller,
                           validator: (value){
+                            confirmpassword=value;
                               if(value==null || value.isEmpty){
                                 return 'Password is required';
                               }
@@ -113,6 +115,9 @@ class _SignUpState extends State<SignUp> {
                           validator: (value){
                               if(value==null || value.isEmpty){
                                 return 'Confirm Password is required';
+                              }
+                              else if(value !=confirmpassword){
+                                return " password and confirmpassword not matched";
                               }
                               return null;
       

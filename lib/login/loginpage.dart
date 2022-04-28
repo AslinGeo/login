@@ -17,6 +17,8 @@ class _LoginState extends State<Login> {
   final emailcontroller = TextEditingController();
   final passcontroller = TextEditingController();
   final _formkey = GlobalKey<FormState>();
+   bool _validateLogin=false;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,17 +63,20 @@ class _LoginState extends State<Login> {
                   children: [
                     TextFormField(
                         controller: emailcontroller,
+                        
                         validator: (value){
+                          
                           if(value==null || value.isEmpty){
                             return 'Email is required';
                           }
                           return null;
 
                         },
-                        decoration: const InputDecoration(
+                        decoration:  InputDecoration(
+                          errorText:_validateLogin ?' Invalid Email':null ,
                           hintText: 'Enter Email',
                           labelText: 'Email',
-                          icon: Icon(Icons.person),
+                          icon: const Icon(Icons.person),
                         )),
                     const SizedBox(
                       height: 40,
@@ -79,13 +84,16 @@ class _LoginState extends State<Login> {
                     TextFormField(
                       controller:passcontroller,
                       validator: (value){
+                       
                           if(value==null || value.isEmpty){
                             return 'Password is required';
                           }
+                          
                           return null;
 
                         },
-                        decoration: const InputDecoration(
+                        decoration:  InputDecoration(
+                          errorText:_validateLogin ?' Invalid Password':null ,
                             hintText: 'Enter Password',
                             labelText: 'Password',
                             icon: const Icon(Icons.paste_outlined))),
@@ -117,10 +125,17 @@ class _LoginState extends State<Login> {
                             var value=await LoginService().checkLogin(emailcontroller.text, passcontroller.text);
                             if(value.length >0)
                             {
+                              var data=value;
                                  Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => const HomeScreen()));
+                                  builder: (_) =>  HomeScreen(data: data,)));
+                            }
+                            else{
+                            setState(() {
+                              _validateLogin=true;
+                            });
+                              
                             }
                           }
                           
